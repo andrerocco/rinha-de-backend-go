@@ -4,11 +4,17 @@ import (
 	"github.com/google/uuid"
 )
 
-func NewPessoa(apelido string, nome string, nascimento string) Pessoa {
+func NewPessoa(apelido, nome, nascimento string, stack ...string) Pessoa {
+	if len(stack) == 0 {
+		stack = nil
+	}
+
 	return Pessoa{
+		Id:         uuid.New(),
 		Apelido:    apelido,
 		Nome:       nome,
 		Nascimento: nascimento,
+		Stack:      stack,
 	}
 }
 

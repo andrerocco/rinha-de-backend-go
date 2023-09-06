@@ -38,7 +38,7 @@ func HandlePessoa(w http.ResponseWriter, r *http.Request) {
 }
 
 func getPessoa(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("> Request received at '/pessoas/%s'", r.URL.Path[len("/pessoas/"):])
+	fmt.Printf("> Request received at '/pessoas/%s'\n", r.URL.Path[len("/pessoas/"):])
 
 	pessoa := models.NewPessoa("andrerocco", "André Rocco", "1989-01-01")
 
@@ -47,7 +47,7 @@ func getPessoa(w http.ResponseWriter, r *http.Request) {
 }
 
 func postPessoa(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("POST /pessoas")
+	fmt.Println("POST /pessoas\n")
 	json.NewEncoder(w).Encode("POST /pessoas")
 }
 

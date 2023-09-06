@@ -3,17 +3,17 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
-	"github.com/andrerocco/rinha-de-backend-go/database"
 	"github.com/andrerocco/rinha-de-backend-go/handler"
 )
 
 type APIServer struct {
-	port int
+	port string
 }
 
 // Cria um novo objeto APIServer e retorna o ponteiro
-func NewAPIServer(port int) *APIServer {
+func NewAPIServer(port string) *APIServer {
 	return &APIServer{port: port}
 }
 
@@ -23,19 +23,21 @@ func (s *APIServer) Start() {
 	http.HandleFunc("/pessoas/", handler.HandlePessoa)
 
 	// Inicializa o servidor
-	fmt.Printf("Servidor inicializado (:%d)\n", s.port)
-	err := http.ListenAndServe(fmt.Sprintf(":%d", s.port), nil)
+	fmt.Printf("> Servidor inicializado (:%s)\n", s.port)
+	err := http.ListenAndServe(fmt.Sprintf(":%s", s.port), nil)
 	if err != nil {
+		fmt.Printf("> Erro ao inicializar o inicializar o servidor de roteamento: %s\n", err.Error())
 		panic(err)
 	}
 }
 
 func main() {
-	_, err := database.Init()
+	/* _, err := database.Init()
 	if err != nil {
 		panic(err)
-	}
+	} */
 
-	server := NewAPIServer(8080)
+	// Get docker env vars
+	server := NewAPIServer(os.Getenv("API_PORT"))
 	server.Start()
 }

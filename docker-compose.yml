@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+    api:
+        build: .
+        ports:
+            - "3333:3333"
+        volumes:
+            - .:/usr/src/app
+        command: go run cmd/main.go -b 0.0.0.0
+        environment:
+            - API_PORT=3333
+            - DB_HOST=postgres
+            - DB_PORT=5432
+            - DB_USER=postgres
+            - DB_PASSWORD=postgres
+            - DB_NAME=postgres
