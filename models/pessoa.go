@@ -23,5 +23,5 @@ type Pessoa struct {
 	Apelido    string    `json:"apelido"`
 	Nome       string    `json:"nome"`
 	Nascimento string    `json:"nascimento"`
-	Stack      []string  `json:"stack,omitempty"`
+	Stack      []string  `json:"stack,omitempty"` // TODO - Decidir se manter omitempty
 }

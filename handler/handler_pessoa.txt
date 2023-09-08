@@ -38,17 +38,38 @@ func HandlePessoa(w http.ResponseWriter, r *http.Request) {
 }
 
 func getPessoa(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("> Request received at '/pessoas/%s'\n", r.URL.Path[len("/pessoas/"):])
 
-	pessoa := models.NewPessoa("andrerocco", "André Rocco", "1989-01-01")
-
-	WriteJSON(w, http.StatusOK, pessoa)
+	// WriteJSON(w, http.StatusOK, pessoa)
 	// return WriteJSON(w, http.StatusOK, pessoa)
 }
 
 func postPessoa(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("POST /pessoas\n")
-	json.NewEncoder(w).Encode("POST /pessoas")
+	fmt.Println("> Requisição de POST recebida em /pessoas")
+
+	var pessoa models.Pessoa
+	// Decodifica o corpo do JSON da requisição para pessoa
+	err := json.NewDecoder(r.Body).Decode(&pessoa)
+	if err != nil {
+		http.Error(w, "Erro ao ler dados da requisição", http.StatusBadRequest)
+		return
+	}
+
+	// Valida os dados da requisição
+	if pessoa.Apelido == "" || pessoa.Nome == "" || pessoa.Nascimento == "" {
+		http.Error(w, "Campos obrigatórios não preenchidos", http.StatusUnprocessableEntity)
+		return
+	}
+
+	// O campo Apelido preciso ser único e para isso, tenta-se inserir a pessoa no banco de dados
+	// Se o banco já houver uma pessoa com o mesmo apelido, o banco de dados retornará um erro
+	err = database.InsertPessoa(pessoa)
+	if err != nil {
+		fmt.Printf("> Erro ao inserir pessoa no banco de dados: %s\n", err.Error())
+		http.Error(w, "O 'apelido' fornecido já existe", http.StatusConflict)
+		return
+	}
+
+	WriteJSON(w, http.StatusCreated, pessoa)
 }
 
 /* func postPessoa(w http.ResponseWriter, r *http.Request) {

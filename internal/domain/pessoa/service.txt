@@ -1,0 +1,27 @@
+package pessoa
+
+// Aqui, você coloca a lógica de negócios da sua aplicação e usa o repositório para interagir com o banco de dados.
+// Essa camada é responsável por aplicar regras de negócios, validações e orquestração de operações.
+// Exemplo (service/pessoa_service.go):
+
+/* package service
+
+import (
+	"github.com/andrerocco/rinha-de-backend-go/cmd/api/models"
+	"github.com/andrerocco/rinha-de-backend-go/cmd/api/repository"
+)
+
+type PessoaService struct {
+	pessoaRepo *repository.PessoaRepository
+}
+
+func NewPessoaService(pessoaRepo *repository.PessoaRepository) *PessoaService {
+	return &PessoaService{pessoaRepo}
+}
+
+func (s *PessoaService) CriarPessoa(pessoa *models.Pessoa) error {
+	// Implemente a lógica de negócios aqui, aplique validações, e chame o repositório para criar a pessoa.
+	return s.pessoaRepo.CriarPessoa(pessoa)
+} */
+
+// Implemente outras funções de serviço aqui, que interagem com o repositório conforme necessário.
