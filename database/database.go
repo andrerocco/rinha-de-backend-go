@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/andrerocco/rinha-de-backend-go/models"
-	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 )
 
@@ -67,11 +66,11 @@ func (s *DB) Close() {
 func (s *DB) createTables() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS pessoa (
-	    id UUID PRIMARY KEY,
-	    apelido TEXT UNIQUE NOT NULL,
-	    nome TEXT NOT NULL,
-	    nascimento TEXT NOT NULL,
-	    stack TEXT[]
+		id UUID PRIMARY KEY UNIQUE DEFAULT,
+		apelido VARCHAR(32) UNIQUE NOT NULL,
+		nome VARCHAR(100),
+		nascimento CHAR(10) NOT NULL,
+		stack TEXT
 	);
 	`
 
@@ -80,12 +79,9 @@ func (s *DB) createTables() error {
 }
 
 func (s *DB) InserePessoa(pessoa models.Pessoa) error {
-	// Converte o slice de strings para um array de strings
-	stack := pq.Array(pessoa.Stack)
-
 	_, err := s.postgres.Exec(
-		"INSERT INTO pessoa (id, apelido, nome, nascimento, stack) VALUES ($1, $2, $3, $4, $5)",
-		pessoa.Id, pessoa.Apelido, pessoa.Nome, pessoa.Nascimento, stack,
+		"INSERT INTO pessoa (apelido, nome, nascimento, stack) VALUES ($1, $2, $3, $4)",
+		pessoa.Apelido, pessoa.Nome, pessoa.Nascimento, pessoa.Stack,
 	)
 	return err
 }
@@ -112,6 +108,7 @@ func (s *DB) ExcluiPessoa(id string) error {
 }
 
 func (s *DB) ConsultaPessoas() ([]models.Pessoa, error) {
+	// Executa a consulta SQL para recuperar as pessoas do banco de dados
 	query := `
 		SELECT id, apelido, nome, nascimento, stack
 		FROM pessoa
@@ -123,6 +120,7 @@ func (s *DB) ConsultaPessoas() ([]models.Pessoa, error) {
 	}
 	defer rows.Close()
 
+	// Itera sobre as linhas retornadas da consulta
 	var pessoas []models.Pessoa
 	for rows.Next() {
 		var pessoa models.Pessoa
@@ -130,7 +128,6 @@ func (s *DB) ConsultaPessoas() ([]models.Pessoa, error) {
 		if err != nil {
 			return nil, err
 		}
-
 		pessoas = append(pessoas, pessoa)
 	}
 
